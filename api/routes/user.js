@@ -12,7 +12,15 @@ router.post("/signup", (req, res, next) => {
   let req_email = req.body.email
   let req_password= req.body.password
   let crypt_pass = cryptage_engine.encrypt(req_password)
-
+  let req_first_name = req.body.first_name
+  let req_last_name  = req.body.last_name
+  let req_phone_number = req.body.phone_number
+  let req_birthday= req.body.birthday
+  let req_about= req.body.about
+  let req_cv_link=req.body.cv_link
+  let req_experience=req.body.experience
+  let req_location= req.body.location
+  let req_projects= req.body.projects
   User.find({ email: req.body.email })
     .exec()
     .then(user => {
@@ -20,11 +28,27 @@ router.post("/signup", (req, res, next) => {
         return res.status(409).json({
           message: "Mail exists"
         });
-      } else {
+      } 
+     
+      
+      else {
+        console.log("yo")
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
+              first_name: req_first_name,
+              last_name: req_last_name,
+              phone_number: req_phone_number,
+              birthday: req_birthday ,
+              about: req_about,
+              cv_link: req_cv_link,
+              experience: req_experience,
+              location: req_location,
+              projects: req_projects,
               email: req_email,
               password:crypt_pass
+
+
+
             });
             user
               .save()
