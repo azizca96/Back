@@ -76,7 +76,7 @@ router.post("/signup", (req, res, next) => {
 
 
 //route for auth
-router.post("/login",(req , res)=> {
+router.post("/login",(req , res, next)=> {
   let req_email = req.body.email
   let req_password= req.body.password
   let crypt_pass = cryptage_engine.encrypt(req_password)
@@ -114,6 +114,63 @@ router.post("/login",(req , res)=> {
 
 })
  
+//route for getting all  users in the  data base
+router.get("/getuser", (req, res, next) =>{
+ User.find()
+  .select("email first_name last_name phone_number birthday about cv_link experience location projects _id")
+  .exec()
+  .then(result => {
+    res.status(200).json({
+      count: result.length,
+      users: result.map(result => {
+        return{
+          _id: result._id,
+          email: result.email,
+         // password, 
+          first_name: result.first_name,
+          last_name: result.last_name,
+          phone_number: result.phone_number,
+          birthday: result.birthday ,
+          about: result.about,
+          cv_link: result.cv_link,
+          experience: result.experience,
+          location: result.location,
+          projects: result.projects
+      
+        }
+      })
+
+    })
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err
+    })
+  })
+})
+
+// route  for finding  by  id  users
+
+router.get("/:userId", (req, res, next) =>{
+  User.findById(req.params.userId)
+   //.select("email first_name last_name phone_number birthday about cv_link experience location projects _id")
+   .exec()
+   .then(users => {
+   if(!users){
+     return res.status(404).json({
+       message: "no user found"
+     })
+   }
+   res.status(200).json({
+     user_found: users
+   })
+   })
+   .catch(err => {
+     res.status(500).json({
+       error: err
+     })
+   })
+ })
 
 //route to delete user by id
 router.delete("/:userId", (req, res, next) => {
