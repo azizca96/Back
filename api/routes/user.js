@@ -172,7 +172,7 @@ router.get("/:userId", (req, res, next) =>{
    })
  })
 
-//route to delete user by id
+//route to delete user by id now
 router.delete("/:userId", (req, res, next) => {
   User.remove({ _id: req.params.userId })
     .exec()
